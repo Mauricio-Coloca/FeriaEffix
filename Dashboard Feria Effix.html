@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coloca Payments - Dashboard de Respuestas</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-dark: #0A2E5C;
+            --primary-medium: #1E5F8E;
+            --primary-light: #4A7BA7;
+            --accent-emerald: #2E8B57;
+            --accent-gold: #D4AF37;
+            --accent-indigo: #4B0082;
+            --accent-tomato: #FF6347;
+            --accent-teal: #20B2AA;
+            --accent-chocolate: #8B4513;
+            --accent-coral: #FF7F50;
+            --accent-purple: #9370DB;
+            --accent-seagreen: #3CB371;
+            --accent-slategray: #708090;
+            --accent-crimson: #DC143C;
+            --accent-darkgoldenrod: #B8860B;
+            --text-dark: #1A1A1A;
+            --text-medium: #4A4A4A;
+            --text-light: #7A7A7A;
+            --bg-light: #F8F9FA;
+            --bg-medium: #E9ECEF;
+            --bg-dark: #DEE2E6;
+            --border-light: #E0E0E0;
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+            box-shadow: var(--shadow-medium);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            padding: 0.5rem 1rem !important;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .navbar-nav .nav-link.active {
+            color: var(--accent-gold) !important;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .dashboard-container {
+            padding: 2rem 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.4s ease;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-medium), var(--primary-light));
+            color: white;
+            border-bottom: none;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            border-radius: 12px 12px 0 0 !important;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+        }
+        
+        .stat-card.dark-blue {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+        }
+        
+        .stat-card.emerald {
+            background: linear-gradient(135deg, #1B5E3F, var(--accent-emerald));
+        }
+        
+        .stat-card.indigo {
+            background: linear-gradient(135deg, #311B92, var(--accent-indigo));
+        }
+        
+        .stat-card.gold {
+            background: linear-gradient(135deg, #B8860B, var(--accent-gold));
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            padding: 1rem !important;
+        }
+        
+        .table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(10, 46, 92, 0.05);
+        }
+        
+        .table td {
+            padding: 1rem !important;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .btn-filter {
+            background-color: var(--primary-medium);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            margin: 0.25rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .btn-filter:hover, .btn-filter.active {
+            background-color: var(--accent-emerald);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .product-tag {
+            display: inline-block;
+            background-color: rgba(10, 46, 92, 0.1);
+            color: var(--primary-dark);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            margin: 0.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .product-tag:hover {
+            background-color: rgba(10, 46, 92, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .country-tag {
+            display: inline-block;
+            background-color: rgba(46, 139, 87, 0.1);
+            color: var(--accent-emerald);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            margin: 0.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .country-tag:hover {
+            background-color: rgba(46, 139, 87, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .surveyor-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .surveyor-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+        
+        .surveyor-carlos {
+            background-color: rgba(10, 46, 92, 0.1);
+            color: var(--primary-dark);
+        }
+        
+        .surveyor-laura {
+            background-color: rgba(46, 139, 87, 0.1);
+            color: var(--accent-emerald);
+        }
+        
+        .surveyor-mauricio {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
+        }
+        
+        .surveyor-pedro {
+            background-color: rgba(139, 69, 19, 0.1);
+            color: var(--accent-chocolate);
+        }
+        
+        .surveyor-sofia {
+            background-color: rgba(75, 0, 130, 0.1);
+            color: var(--accent-indigo);
+        }
+        
+        .surveyor-juanjo {
+            background-color: rgba(255, 99, 71, 0.1);
+            color: var(--accent-tomato);
+        }
+        
+        .surveyor-stephanies {
+            background-color: rgba(32, 178, 170, 0.1);
+            color: var(--accent-teal);
+        }
+        
+        .surveyor-salmon {
+            background-color: rgba(255, 127, 80, 0.1);
+            color: var(--accent-coral);
+        }
+        
+        .surveyor-nombre5 {
+            background-color: rgba(147, 112, 219, 0.1);
+            color: var(--accent-purple);
+        }
+        
+        .surveyor-nombre1 {
+            background-color: rgba(60, 179, 113, 0.1);
+            color: var(--accent-seagreen);
+        }
+        
+        .surveyor-unassigned {
+            background-color: rgba(112, 128, 144, 0.1);
+            color: var(--accent-slategray);
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .contact-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--primary-dark);
+        }
+        
+        .contact-email {
+            color: var(--primary-medium);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .contact-phone {
+            color: var(--text-medium);
+            font-size: 0.85rem;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 1px solid var(--border-light);
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: white;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-medium);
+            box-shadow: 0 0 0 3px rgba(10, 46, 92, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-medium);
+        }
+        
+        .filter-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+        
+        .filter-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .filter-pill {
+            background-color: var(--bg-medium);
+            color: var(--text-medium);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .filter-pill:hover {
+            background-color: var(--primary-medium);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .filter-pill.active {
+            background-color: var(--accent-emerald);
+            color: white;
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .filter-summary {
+            background-color: rgba(10, 46, 92, 0.05);
+            border-left: 4px solid var(--primary-medium);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .filter-summary-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .filter-summary-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .filter-summary-tag {
+            background-color: var(--primary-medium);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem 0.5rem;
+            }
+            
+            .stat-value {
+                font-size: 1.8rem;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .table-container {
+                max-height: 300px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            
+            .filter-pills {
+                justify-content: center;
+            }
+            
+            .table {
+                font-size: 0.85rem;
+            }
+            
+            .table thead th {
+                font-size: 0.75rem;
+                padding: 0.75rem 0.5rem !important;
+            }
+            
+            .table td {
+                padding: 0.75rem 0.5rem !important;
+            }
+            
+            .contact-info {
+                font-size: 0.85rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+            
+            .stat-icon {
+                font-size: 2rem;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .filter-title {
+                font-size: 1rem;
+            }
+            
+            .search-input {
+                padding: 0.5rem 1rem 0.5rem 2.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .search-icon {
+                left: 1rem;
+            }
+        }
+        
+        /* Loading spinner */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .spinner-container {
+            text-align: center;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3rem;
+        }
+        
+        .spinner-text {
+            margin-top: 1rem;
+            font-weight: 500;
+            color: var(--primary-medium);
+        }
+        
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        .pagination {
+            margin-bottom: 0;
+        }
+        
+        .page-link {
+            color: var(--primary-medium);
+            border-radius: 0.3rem;
+            margin: 0 0.2rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .page-item.active .page-link {
+            background-color: var(--primary-medium);
+            border-color: var(--primary-medium);
+        }
+        
+        .page-link:hover {
+            color: var(--primary-dark);
+            background-color: rgba(10, 46, 92, 0.05);
+        }
+        
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-medium);
+        }
+        
+        .no-results-icon {
+            font-size: 3rem;
+            color: var(--bg-medium);
+            margin-bottom: 1rem;
+        }
+        
+        .no-results-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .no-results-text {
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        /* Export button */
+        .btn-export {
+            background-color: var(--accent-emerald);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .btn-export:hover {
+            background-color: #236B47;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="spinner-container">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <div class="spinner-text">Procesando datos...</div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#dashboard">
+                Coloca Payments - Dashboard de Respuestas
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#data"><i class="fas fa-table me-1"></i> Datos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#analytics"><i class="fas fa-chart-line me-1"></i> Análisis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reports"><i class="fas fa-file-alt me-1"></i> Reportes</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboard">
+        <!-- Stats Cards -->
+        <div class="row mb-4 fade-in">
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card stat-card dark-blue">
+                    <div class="card-body">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-value">106</div>
+                        <div class="stat-label">Total de Respuestas</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card stat-card emerald">
+                    <div class="card-body">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-value">95</div>
+                        <div class="stat-label">Hacen E-commerce</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card stat-card indigo">
+                    <div class="card-body">
+                        <div class="stat-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="stat-value">25+</div>
+                        <div class="stat-label">Países Representados</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card stat-card gold">
+                    <div class="card-body">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="stat-value">13</div>
+                        <div class="stat-label">Encuestadores</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Search and Filters -->
+        <div class="card mb-4 fade-in">
+            <div class="card-header">
+                <h5 class="mb-0">Filtros y Búsqueda</h5>
+            </div>
+            <div class="card-body">
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="globalSearch" placeholder="Buscar por nombre, email, productos, países, etc.">
+                </div>
+                
+                <!-- Filters -->
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="filter-section">
+                            <div class="filter-title">Encuestador:</div>
+                            <div class="filter-pills">
+                                <div class="filter-pill active" data-filter="surveyor" data-value="all">Todos</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="Carlos">Carlos</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="Laura">Laura</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="Mauricio">Mauricio</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="Pedro">Pedro</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="Sofia">Sofia</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="Juanjo">Juanjo</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="Stephanies">Stephanies</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="Salmon">Salmon</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="Nombre de Persona 5">Nombre de Persona 5</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="Nombre de Persona 1">Nombre de Persona 1</div>
+                                <div class="filter-pill" data-filter="surveyor" data-value="">Sin asignar</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="filter-section">
+                            <div class="filter-title">Producto de Interés:</div>
+                            <div class="filter-pills">
+                                <div class="filter-pill active" data-filter="product" data-value="all">Todos</div>
+                                <div class="filter-pill" data-filter="product" data-value="Pasarela">Pasarela</div>
+                                <div class="filter-pill" data-filter="product" data-value="Tarjetas">Tarjetas</div>
+                                <div class="filter-pill" data-filter="product" data-value="Proveedores">Proveedores</div>
+                                <div class="filter-pill" data-filter="product" data-value="Cripto">Cripto</div>
+                                <div class="filter-pill" data-filter="product" data-value="Divisas">Divisas</div>
+                                <div class="filter-pill" data-filter="product" data-value="Otro">Otro</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="filter-section">
+                            <div class="filter-title">E-commerce:</div>
+                            <div class="filter-pills">
+                                <div class="filter-pill active" data-filter="ecommerce" data-value="all">Todos</div>
+                                <div class="filter-pill" data-filter="ecommerce" data-value="Sí">Sí</div>
+                                <div class="filter-pill" data-filter="ecommerce" data-value="No">No</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-end mt-3">
+                    <button class="btn btn-sm btn-outline-secondary" id="resetFilters">
+                        <i class="fas fa-redo me-1"></i> Restablecer Filtros
+                    </button>
+                    <button class="btn btn-sm btn-export ms-2" id="exportData">
+                        <i class="fas fa-download me-1"></i> Exportar CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Charts Row -->
+        <div class="row mb-4" id="analytics">
+            <div class="col-lg-6 mb-4">
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h5 class="mb-0">Productos de Interés</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="productsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h5 class="mb-0">Respuestas por Encuestador</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="surveyorsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Countries Chart -->
+        <div class="row mb-4">
+            <div class="col-lg-12 mb-4">
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h5 class="mb-0">Países de Operación</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="countriesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Filter Summary -->
+        <div class="filter-summary" id="filterSummary" style="display: none;">
+            <div class="filter-summary-title">Filtros aplicados:</div>
+            <div class="filter-summary-tags" id="filterSummaryTags"></div>
+        </div>
+        <!-- Data Table -->
+        <div class="card mb-4 fade-in" id="data">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0" id="tableTitle">Datos Detallados</h5>
+                <div>
+                    <span class="badge bg-primary" id="resultCount">106 resultados</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- No Results Message -->
+                <div class="no-results" id="noResults" style="display: none;">
+                    <div class="no-results-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="no-results-title">No se encontraron resultados</div>
+                    <div class="no-results-text">
+                        Intenta ajustar tus filtros o términos de búsqueda para encontrar lo que buscas.
+                    </div>
+                </div>
+                
+                <!-- Table Container -->
+                <div class="table-container" id="tableContainer">
+                    <table class="table table-hover" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Contacto</th>
+                                <th>E-commerce</th>
+                                <th>Productos de Interés</th>
+                                <th>Países</th>
+                                <th>Encuestador</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se insertarán aquí con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination-container" id="paginationContainer">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination" id="pagination">
+                            <!-- Los elementos de paginación se generarán con JavaScript -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="footer" id="reports">
+        <div class="container">
+            <p>&copy; 2025 Coloca Payments. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Datos procesados del formulario
+        const formData = [
+            {id: 1, date: '2025-08-22 7:58:30', email: 'tes@gmail.com', phone: '(55) 5456889757', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países'], countries: ['Japon'], surveyor: 'Nombre de Persona 5', name: ''},
+            {id: 2, date: '2025-08-22 8:02:05', email: 'bzjsb@gmail.com', phone: '(57) 3168543258', ecommerce: 'Sí', products: ['Comprar y/o vender criptomonedas (USDT)'], countries: ['Bubbb'], surveyor: 'Nombre de Persona 1', name: 'Hugh'},
+            {id: 3, date: '2025-08-22 10:53:32', email: 'lactorressu@gmail.com', phone: '(57) 3146311578', ecommerce: 'Sí', products: ['Pagar a proveedores o equipo (contratistas) en otros países'], countries: [], surveyor: 'Carlos', name: ''},
+            {id: 4, date: '2025-08-22 13:15:36', email: 'eli@naturalistica.co', phone: '(57) 3246869303', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Elizabeth Arias - empresa Fyora'},
+            {id: 5, date: '2025-08-22 13:49:25', email: 'jesusdanielsanchezacevedo@gmail.com', phone: '(57) 3052462555', ecommerce: 'Sí', products: ['Otro'], countries: ['Cross border mex col'], surveyor: 'Salmon', name: 'Jesus Sanchez'},
+            {id: 6, date: '2025-08-22 13:49:43', email: 'juan6735@gmail.com', phone: '(57) 3243517451', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['USA - GUATEMALA'], surveyor: 'Carlos', name: 'JUAN GUILLERMO Castaño'},
+            {id: 7, date: '2025-08-22 13:54:04', email: 'jedamaro1@gmail.com', phone: '(57) 3106199609', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Salmon', name: 'Jesus Martinez'},
+            {id: 8, date: '2025-08-22 14:47:01', email: 'andres.cruz@proships.com', phone: '(57) 3133845231', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Andres Cruz - Proships e conmerce'},
+            {id: 9, date: '2025-08-22 15:13:52', email: 'mateodta2@gmail.com', phone: '(57) 3195647519', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Mateo Barrientos - Zilonix'},
+            {id: 10, date: '2025-08-22 15:15:31', email: 'grupozilonix@gmail.com', phone: '(57) 3183849442', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Sharel Barrientos'},
+            {id: 11, date: '2025-08-22 15:24:05', email: 'equalesence12@xn--gmai-jqa.com', phone: '(57) 3007046378', ecommerce: 'No', products: ['Otro'], countries: ['Solo vende en colombia. Hay que ayudarlo a vender a clientes de afuera'], surveyor: 'Mauricio', name: 'Roberto Ignacio'},
+            {id: 12, date: '2025-08-22 15:46:39', email: 'r_alj@hotmail.com', phone: '(+1) 3466736685', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['EEUU Y COLOMBIA'], surveyor: 'Carlos', name: 'RODRIGO CAMARGO'},
+            {id: 13, date: '2025-08-22 15:46:56', email: 'susanap.publicidad@gmail.com', phone: '(57) 3105477881', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Se traen los productos de chile , Brasil y ecuador'], surveyor: 'Laura', name: 'Susana Arenas - venecol'},
+            {id: 14, date: '2025-08-22 16:07:33', email: 'migueljt269@gmail.com', phone: '(57) 3187049857', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Colombia, USA .'], surveyor: 'Laura', name: 'Miguel Valencia'},
+            {id: 15, date: '2025-08-22 16:08:20', email: 'jesusegh7@gmail.com', phone: '(57) 3052140345', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['ECUADOR - MÉXICO - USA - COLOMBIA'], surveyor: 'Carlos', name: 'JESUS DAVID GRANADOS'},
+            {id: 16, date: '2025-08-22 16:27:17', email: 'comercioleonardo.n@gmail.com', phone: '(57) 3161816662', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Colombia, Mexico'], surveyor: 'Stephanies', name: 'Leonardo Niño'},
+            {id: 17, date: '2025-08-22 17:08:55', email: 'nezareth.la.10@gmail.com', phone: '(51) 970391259', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['China y Perú.'], surveyor: 'Laura', name: 'Carlos Patiño'},
+            {id: 18, date: '2025-08-22 18:22:03', email: 'cafeparatusaludmkd@gmail.com', phone: '(57) 3217153429', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad'], countries: ['Colombia, brasil'], surveyor: 'Mauricio', name: 'Andressa Velásquez'},
+            {id: 19, date: '2025-08-22 18:36:38', email: 'eespinal@andagencia.com', phone: '(57) 3113104150', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['ESPAÑA - USA - PANAMÁ - COLOMBIA'], surveyor: 'Carlos', name: 'EDWIN ESPINAL'},
+            {id: 20, date: '2025-08-22 18:41:10', email: 'andres@pow.la', phone: '(54) 1168028417', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['CHILE - COLOMBIA - MEXICO'], surveyor: 'Carlos', name: 'ANDRES ACERENZA'},
+            {id: 21, date: '2025-08-23 10:49:58', email: 'wburiticaalvira@gmail.com', phone: '(57) 3123048220', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['ECUADOR'], surveyor: 'Carlos', name: 'WILMER BURITICA'},
+            {id: 22, date: '2025-08-23 11:02:10', email: 'dianaraquelpenar@gmail.com', phone: '(57) 3016785136', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['EEUU - ECUADOR'], surveyor: 'Carlos', name: 'DIANA RAQUEL PEÑA'},
+            {id: 23, date: '2025-08-23 11:32:25', email: 'angie.alfonsog@gmail.com', phone: '(57) 3003123573', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Ecuador y Panamá'], surveyor: 'Laura', name: 'Angie Alfonso'},
+            {id: 24, date: '2025-08-23 11:43:09', email: 'diego.vanegas@usaconet.com', phone: '(57) 3203767475', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Usa, España y chile'], surveyor: 'Laura', name: 'Diego Vanegas'},
+            {id: 25, date: '2025-08-23 12:58:36', email: 'rtalcala@officeboyexpress.com.co', phone: '(57) 3014081319', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['USA - EUR - VEN'], surveyor: 'Carlos', name: 'ROSELY Toro EFFI'},
+            {id: 26, date: '2025-08-23 13:16:57', email: 'rodriguesinc16@gmail.com', phone: '(55) 42984423945', ecommerce: 'No', products: ['Otro'], countries: ['Hace lo mismo que nosotros. Tiene cash en usa y ven'], surveyor: 'Mauricio', name: 'Rafael Santos'},
+            {id: 27, date: '2025-08-23 13:23:12', email: 'director@atomsolutionsdata.com', phone: '(57) 3122521130', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Eliana Murillo'},
+            {id: 28, date: '2025-08-23 13:31:19', email: 'pedro@coloca.com', phone: '(1) 7864006782', ecommerce: 'Sí', products: ['Otro'], countries: ['Panamá.'], surveyor: 'Pedro', name: 'Arturo Middelton'},
+            {id: 29, date: '2025-08-23 13:34:12', email: 'diegori17@gmail.com', phone: '(57) 3042025641', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Diego Rico'},
+            {id: 30, date: '2025-08-23 13:36:18', email: 'jmacias@masmore.co', phone: '(57) 3002488503', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Javier Macias'},
+            {id: 31, date: '2025-08-23 13:41:50', email: 'juliansanchez022@gmail.com', phone: '(57) 3004297888', ecommerce: 'Sí', products: ['Comprar y/o vender criptomonedas (USDT)'], countries: [], surveyor: 'Laura', name: 'Julian Orozco'},
+            {id: 32, date: '2025-08-23 13:51:18', email: 'presidenciahjl@gmai.com', phone: '(57) 3205153704', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad'], countries: [], surveyor: 'Laura', name: 'Hancel Leon'},
+            {id: 33, date: '2025-08-23 13:53:53', email: 'henryo718@gmail.com', phone: '(57) 3013975934', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Henry Ortiz'},
+            {id: 34, date: '2025-08-23 13:54:04', email: 'nre9815@hotmal.com', phone: '(57) 3175872978', ecommerce: 'Sí', products: [], countries: [], surveyor: 'Laura', name: 'Nicolas Rojas'},
+            {id: 35, date: '2025-08-23 13:57:01', email: 'steven-cardona@hotmail.com', phone: '(57) 3155040617', ecommerce: 'No', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Steven Cardona'},
+            {id: 36, date: '2025-08-23 13:59:35', email: 'joromeroramos@gmail.com', phone: '(57) 3007613121', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Jorge Romero'},
+            {id: 37, date: '2025-08-23 14:02:00', email: 'bigmind.lab@gmail.com', phone: '(57) 3115222184', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Sebastian Pacheco'},
+            {id: 38, date: '2025-08-23 14:04:16', email: 'gerencia@ecogreensolar.co', phone: '(57) 3003666051', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Jorge Montoya'},
+            {id: 39, date: '2025-08-23 14:06:03', email: 'ardilafranklin9@gmail.com', phone: '(57) 3208406926', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Stiven Saosa'},
+            {id: 40, date: '2025-08-23 14:06:55', email: 'ejaramillo@togrowagencia.com', phone: '(57) 3012025475', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Esteban Jaramillo'},
+            {id: 41, date: '2025-08-23 14:19:44', email: 'valenbocanegradigital@gmail.com', phone: '(57) 3107222641', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Valentina Bocanegra'},
+            {id: 42, date: '2025-08-23 14:21:45', email: 'marcela.jaramillo@tekniikan.com', phone: '(57) 3043183813', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Marcela Jaramillo'},
+            {id: 43, date: '2025-08-23 14:34:26', email: 'danielx9@gmail.com', phone: '(57) 3006211340', ecommerce: 'Sí', products: ['Pagar a proveedores o equipo (contratistas) en otros países'], countries: [], surveyor: 'Laura', name: 'Daniel Rosales'},
+            {id: 44, date: '2025-08-23 14:36:03', email: 'cenlogcarga@gmail.com', phone: '(57) 3127723435', ecommerce: 'No', products: [], countries: ['Usa'], surveyor: 'Mauricio', name: 'Carlos Castellano centraldelogistica'},
+            {id: 45, date: '2025-08-23 15:21:58', email: 'alexpillacas82@gmail.com', phone: '(57) 3105968092', ecommerce: 'No', products: ['Pasarela de pagos global sin necesidad de entidad', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['QUIERE EXPANDIRSE'], surveyor: 'Carlos', name: 'Carlos Pinilla'},
+            {id: 46, date: '2025-08-23 15:33:55', email: 'gerencia@ofertix.co', phone: '(57) 3006374371', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['BARRANQUILLA'], surveyor: 'Carlos', name: 'MARIANA Ofertix'},
+            {id: 47, date: '2025-08-23 15:37:56', email: 'gerencia@aldialogistica.co', phone: '(57) 3204888828', ecommerce: 'No', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['ECUADOR Y COLOMBIA'], surveyor: 'Carlos', name: 'ALDIA LOGÍSTICA LORENA'},
+            {id: 48, date: '2025-08-23 15:39:24', email: 'info@fyccomunucacion.com', phone: '(57) 3186858231', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Adrian Arteaga'},
+            {id: 49, date: '2025-08-23 15:42:12', email: 'oficialdecumplimiento@sinfronterascb.com', phone: '(57) 3172268999', ecommerce: 'No', products: ['Pasarela de pagos global sin necesidad de entidad', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['CENTRO AMÉRICA'], surveyor: 'Carlos', name: 'SIN FRONTERAS AGENTE INTERNALPAOL BUITRAGO'},
+            {id: 50, date: '2025-08-23 15:52:13', email: 'anderson@novaluna.com.co', phone: '(57) 3215311700', ecommerce: 'Sí', products: ['Otro'], countries: [], surveyor: 'Pedro', name: 'Anderson Luna'},
+            {id: 51, date: '2025-08-23 15:53:43', email: 'camilosanta727@gmail.com', phone: '(57) 3053416272', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Camilo De la pava'},
+            {id: 52, date: '2025-08-23 16:03:12', email: 'andresfelipegen@gmail.com', phone: '(57) 3137076310', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Andres Ramirez'},
+            {id: 53, date: '2025-08-23 16:07:31', email: 'bedifferent0312@gmail.com', phone: '(57) 3017159005', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Mauricio Murillo'},
+            {id: 54, date: '2025-08-23 16:12:22', email: 'miriam.santacruzc1@gmail.com', phone: '(51) 987713640', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Argentina ñ,p'], surveyor: 'Mauricio', name: 'Miriam Santacruz'},
+            {id: 55, date: '2025-08-23 16:24:15', email: 'freddybd@prizmapay.com', phone: '(57) 3208119224', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Freddy Buritica'},
+            {id: 56, date: '2025-08-23 16:30:00', email: 'hector@synergycoffee.com.co', phone: '(57) 3002411626', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Hector Ruiz'},
+            {id: 57, date: '2025-08-23 16:34:35', email: 'anthoni.cahuana702@gmail.com', phone: '(51) 937396878', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad'], countries: ['Argentina'], surveyor: 'Laura', name: 'Jhon Cahuana'},
+            {id: 58, date: '2025-08-23 17:10:26', email: 'juanjoselongo@gmail.com', phone: '(57) 3244964728', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Usa'], surveyor: 'Laura', name: 'Juan Delgado'},
+            {id: 59, date: '2025-08-23 17:11:53', email: 'danielnaranjo@gmail.com', phone: '(57) 3104117879', ecommerce: 'Sí', products: ['Pagar a proveedores o equipo (contratistas) en otros países', 'Comprar y/o vender criptomonedas (USDT)'], countries: [], surveyor: 'Laura', name: 'Daniel Naranjo'},
+            {id: 60, date: '2025-08-23 17:21:26', email: 'garcila@icloud.com', phone: '(57) 3183239926', ecommerce: 'Sí', products: ['Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'German Arcila'},
+            {id: 61, date: '2025-08-23 17:59:30', email: 'toyouprotex@gmail.com', phone: '(57) 3127903798', ecommerce: 'Sí', products: ['Otro'], countries: ['Usa ven co'], surveyor: 'Mauricio', name: 'Franklin Singer'},
+            {id: 62, date: '2025-08-23 18:49:32', email: 'milovlbc@gmail.com', phone: '(57) 3193482400', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)', 'Otro'], countries: ['Usa'], surveyor: 'Mauricio', name: 'Camilo Valbuena'},
+            {id: 63, date: '2025-08-24 11:20:59', email: 'david@starthub.com.ar', phone: '(57) 3169077128', ecommerce: 'Sí', products: [], countries: [], surveyor: '', name: 'David Acevedo'},
+            {id: 64, date: '2025-08-24 11:37:52', email: 'ceo@suas.com.co', phone: '(57) 3134220009', ecommerce: 'Sí', products: [], countries: [], surveyor: 'Laura', name: 'Mauricio Congora'},
+            {id: 65, date: '2025-08-24 11:46:07', email: 'tapilujosgirardot@yahoo.es', phone: '(57) 3118306504', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Carlos Paez'},
+            {id: 66, date: '2025-08-24 11:48:25', email: 'no.hv@gmail.com', phone: '(57) 3226135410', ecommerce: 'Sí', products: [], countries: [], surveyor: 'Laura', name: 'Esteban B'},
+            {id: 67, date: '2025-08-24 11:53:26', email: 'ceo@imagencit.com', phone: '(52) 9192000000', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['México'], surveyor: 'Laura', name: 'Wiliam Ramos'},
+            {id: 68, date: '2025-08-24 11:56:32', email: 'victor.medina@soluciontic.com.co', phone: '(57) 3007784781', ecommerce: 'No', products: ['Otro'], countries: ['Colombia'], surveyor: 'Sofia', name: 'Victor Medina'},
+            {id: 69, date: '2025-08-24 11:59:16', email: 'adrian.salazar2709@gmail.com', phone: '(57) 3102318895', ecommerce: 'Sí', products: ['Pagar a proveedores o equipo (contratistas) en otros países', 'Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Adrian Salazar'},
+            {id: 70, date: '2025-08-24 12:19:52', email: 'gerencia@gotrader.com.co', phone: '(57) 3195236697', ecommerce: 'Sí', products: ['Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Andres Guerra'},
+            {id: 71, date: '2025-08-24 12:26:23', email: 'test@test.com', phone: '(57) 3195236697', ecommerce: 'Sí', products: ['Otro'], countries: [], surveyor: 'Mauricio', name: 'Andres Guerra'},
+            {id: 72, date: '2025-08-24 12:31:54', email: 'manolo.lozada@gmail.com', phone: '(57) 3025152412', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Latam, Peru, Ecuador , chile, Brasil, USA'], surveyor: 'Laura', name: 'Jose manuel Lozada'},
+            {id: 73, date: '2025-08-24 12:42:00', email: 'danielmogna11@gmail.com', phone: '(57) 3028064914', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Daniel Mogna'},
+            {id: 74, date: '2025-08-24 12:44:47', email: 'test@test.com', phone: '(57) 3216221488', ecommerce: 'Sí', products: ['Otro'], countries: [], surveyor: 'Mauricio', name: 'Miguel Jimenez'},
+            {id: 75, date: '2025-08-24 12:50:07', email: 'jeroerica10@gmail.com', phone: '(57) 3126933527', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Jeronimo Soto'},
+            {id: 76, date: '2025-08-24 12:50:42', email: 'imsanticano@gmail.com', phone: '(44) 7728962843', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)'], countries: [], surveyor: 'Laura', name: 'Santiago Cano'},
+            {id: 77, date: '2025-08-24 12:58:56', email: 'test@test.com', phone: '(57) 3162354511', ecommerce: 'Sí', products: ['Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)', 'Otro'], countries: ['China, hong kong'], surveyor: 'Mauricio', name: 'Cristian Bonaventura'},
+            {id: 78, date: '2025-08-24 12:59:20', email: 'hectorfajardo@me.com', phone: '(57) 3104807922', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Mexico, Guatemala, estado unidos y Colombia'], surveyor: 'Laura', name: 'Hector Fajardo'},
+            {id: 79, date: '2025-08-24 13:00:29', email: 'test@test.com', phone: '(57) 3505210279', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)'], countries: [], surveyor: 'Mauricio', name: 'Juan Lopez'},
+            {id: 80, date: '2025-08-24 13:00:32', email: 'sebas.073@hotmail.com', phone: '(57) 3206931507', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Sebastian Aguirre'},
+            {id: 81, date: '2025-08-24 13:01:17', email: 'gerencia@totalmontajes.com.co', phone: '(57) 3008227373', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)'], countries: [], surveyor: 'Laura', name: 'Juan Bustamante'},
+            {id: 82, date: '2025-08-24 13:17:07', email: 'coorecommerce@fajasmyd.com', phone: '(57) 3164729751', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad'], countries: ['Ecuador, Mexico y USA'], surveyor: 'Laura', name: 'Manuela Villa - fajas MyD'},
+            {id: 83, date: '2025-08-24 13:23:25', email: 'yiliantemascarin@gmail.com', phone: '(57) 3046815108', ecommerce: 'No', products: ['Otro'], countries: ['Usa MX europa'], surveyor: 'Mauricio', name: 'Yiliante Mascarin'},
+            {id: 84, date: '2025-08-24 14:10:44', email: 'nicolassierrafc@gmail.com', phone: '(57) 3197487602', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['COLOMBIA'], surveyor: 'Carlos', name: 'NICOLAS Sierra'},
+            {id: 85, date: '2025-08-24 14:28:24', email: 'dameba171204@gmail.com', phone: '(57) 3002219327', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['COLOMBIA - PERÚ - CHILE - MÉXICO - CENTRO AMÉRICA'], surveyor: 'Carlos', name: 'DAVID MENDOZA'},
+            {id: 86, date: '2025-08-24 14:30:26', email: 'santi11ads@gmail.com', phone: '(57) 3105780065', ecommerce: 'Sí', products: ['Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['México y Perú'], surveyor: 'Laura', name: 'Santiago Peñalosa'},
+            {id: 87, date: '2025-08-24 14:33:46', email: 'gerencia.timesas@gmail.com', phone: '(57) 3225935712', ecommerce: 'No', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países'], countries: [], surveyor: 'Laura', name: 'Ana maria Martinez'},
+            {id: 88, date: '2025-08-24 14:37:10', email: 'andresmtl21@gmail.com', phone: '(57) 3122839878', ecommerce: 'Sí', products: ['Comprar y/o vender criptomonedas (USDT)', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Andres Correa'},
+            {id: 89, date: '2025-08-24 14:37:28', email: 'felipeblackwithepets@gmail.com', phone: '(57) 3113904919', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Felipe Posada'},
+            {id: 90, date: '2025-08-24 14:39:59', email: 'ceuribe3@gmail.com', phone: '(57) 3008533927', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Ecuador'], surveyor: 'Laura', name: 'Esteban Uribe'},
+            {id: 91, date: '2025-08-24 15:14:30', email: 'jariasgz08@gmail.com', phone: '(57) 3192160487', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Comprar y/o vender criptomonedas (USDT)'], countries: ['Latinoamerica'], surveyor: 'Laura', name: 'Julio Arias'},
+            {id: 92, date: '2025-08-24 15:23:06', email: 'echeverryanyelo87@gmail.com', phone: '(57) 3177179777', ecommerce: 'Sí', products: [], countries: [], surveyor: 'Laura', name: 'Anyelo Echeverry'},
+            {id: 93, date: '2025-08-24 15:28:01', email: 'juandavidcruzcaina@growthspectross.com', phone: '(57) 3012543777', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Juan Cruz'},
+            {id: 94, date: '2025-08-24 15:38:07', email: 'joserodrip051993@gmail.com', phone: '(57) 3138129876', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Jose luis Rodriguez'},
+            {id: 95, date: '2025-08-24 15:38:13', email: 'marioandresmontes@gmail.com', phone: '(57) 3043904461', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Perú'], surveyor: 'Laura', name: 'Mario MG'},
+            {id: 96, date: '2025-08-24 15:54:48', email: 'maikolrh2000@hotmail.com', phone: '(+57) 3157787245', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Colombia Ecuador'], surveyor: 'Juanjo', name: 'Maikol Rodriguez'},
+            {id: 97, date: '2025-08-24 15:56:23', email: 'diwer07@gmail.com', phone: '(57) 3143084114', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Colombia, ecuador, EE.UU. México'], surveyor: 'Sofia', name: 'Diwer Romero'},
+            {id: 98, date: '2025-08-24 16:01:28', email: 'w.marinrosas8@gmail.com', phone: '(57) 3044461220', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'William Marin'},
+            {id: 99, date: '2025-08-24 16:43:41', email: 'jhosmaraab19@gmail.com', phone: '(57) 3153072187', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Jhosmara Almera'},
+            {id: 100, date: '2025-08-24 16:48:58', email: 'leandravaldez1@gmail.com', phone: '(57) 3135102060', ecommerce: 'Sí', products: ['Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Leandra Valdez'},
+            {id: 101, date: '2025-08-24 16:53:30', email: 'gabriel.rueda13@hotmail.com', phone: '(57) 3185310033', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad'], countries: ['Ecuador, Guatemala y Colombia'], surveyor: 'Sofia', name: 'Gabriel Rueda'},
+            {id: 102, date: '2025-08-24 17:17:52', email: 'andresmaosorio@gmail.com', phone: '(57) 3007867148', ecommerce: 'Sí', productos: ['Pasarela de pagos global sin necesidad de entidad'], countries: ['Colombia'], surveyor: 'Sofia', name: 'Andrés Osorio'},
+            {id: 103, date: '2025-08-24 17:26:46', email: 'sofia@colocapayments.com', phone: '(57) 3183489165', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad'], countries: ['Colombia, Estados Unidos, España'], surveyor: 'Sofia', name: 'María Isabel García'},
+            {id: 104, date: '2025-08-24 17:27:45', email: 'b2b@bigmedical.co', phone: '(57) 3212201174', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: [], surveyor: 'Laura', name: 'Nicolas Bautista'},
+            {id: 105, date: '2025-08-24 17:29:49', email: 'deihenaoa@gmail.com', phone: '(57) 3217477607', ecommerce: 'Sí', products: ['Pasarela de pagos global sin necesidad de entidad', 'Tarjetas ilimitadas en USD para pauta online (Facebook, Google Ads, etc.)', 'Pagar a proveedores o equipo (contratistas) en otros países', 'Recibir pagos de clientes en múltiples divisas (EUR, USD, etc.)'], countries: ['Usa, proyecto de comenzar a enviar productos a México'], surveyor: 'Laura', name: 'Deisy Henao'},
+            {id: 106, date: '2025-08-24 17:29:57', email: 'julianahenao26@gmail.com', phone: '(57) 3002122188', ecommerce: 'Sí', products: ['Otro'], countries: ['México y usa'], surveyor: 'Mauricio', name: 'Juliana Henao'}
+        ];
+        
+        // Variables globales para los filtros y paginación
+        let currentFilters = {
+            surveyor: 'all',
+            product: 'all',
+            ecommerce: 'all',
+            search: ''
+        };
+        
+        let currentPage = 1;
+        const recordsPerPage = 10;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Asegurarnos de que cada registro tenga un array de productos y países
+            formData.forEach(item => {
+                if (!item.products) {
+                    item.products = [];
+                }
+                if (!item.countries) {
+                    item.countries = [];
+                }
+            });
+            
+            // Inicializar gráficos
+            initCharts();
+            
+            // Cargar tabla de datos
+            loadDataTable();
+            
+            // Configurar eventos de filtros
+            setupFilterEvents();
+            
+            // Configurar navegación suave
+            setupSmoothScroll();
+            
+            // Animaciones de entrada
+            animateOnScroll();
+        });
+        
+        function initCharts() {
+            // Gráfico de productos de interés
+            const productsCtx = document.getElementById('productsChart').getContext('2d');
+            const productsData = getProductInterestData();
+            
+            new Chart(productsCtx, {
+                type: 'bar',
+                data: {
+                    labels: productsData.labels,
+                    datasets: [{
+                        label: 'Interés',
+                        data: productsData.values,
+                        backgroundColor: [
+                            'rgba(10, 46, 92, 0.8)',
+                            'rgba(30, 95, 142, 0.8)',
+                            'rgba(46, 139, 87, 0.8)',
+                            'rgba(212, 175, 55, 0.8)',
+                            'rgba(75, 0, 130, 0.8)',
+                            'rgba(255, 99, 71, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(10, 46, 92, 1)',
+                            'rgba(30, 95, 142, 1)',
+                            'rgba(46, 139, 87, 1)',
+                            'rgba(212, 175, 55, 1)',
+                            'rgba(75, 0, 130, 1)',
+                            'rgba(255, 99, 71, 1)'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 46, 92, 0.9)',
+                            titleFont: {
+                                family: 'Playfair Display',
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                family: 'Montserrat',
+                                size: 13
+                            },
+                            padding: 12,
+                            cornerRadius: 6,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Montserrat',
+                                    weight: '500'
+                                },
+                                padding: 10
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Montserrat',
+                                    weight: '500'
+                                },
+                                padding: 10
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de encuestadores
+            const surveyorsCtx = document.getElementById('surveyorsChart').getContext('2d');
+            const surveyorsData = getSurveyorsData();
+            
+            new Chart(surveyorsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: surveyorsData.labels,
+                    datasets: [{
+                        data: surveyorsData.values,
+                        backgroundColor: [
+                            'rgba(10, 46, 92, 0.8)',      // Carlos - Azul marino
+                            'rgba(46, 139, 87, 0.8)',     // Laura - Verde esmeralda
+                            'rgba(212, 175, 55, 0.8)',    // Mauricio - Dorado
+                            'rgba(139, 69, 19, 0.8)',     // Pedro - Chocolate
+                            'rgba(75, 0, 130, 0.8)',      // Sofia - Índigo
+                            'rgba(255, 99, 71, 0.8)',     // Juanjo - Tomate
+                            'rgba(32, 178, 170, 0.8)',    // Stephanies - Aguamarina
+                            'rgba(255, 127, 80, 0.8)',    // Salmon - Coral
+                            'rgba(147, 112, 219, 0.8)',   // Nombre de Persona 5 - Púrpura
+                            'rgba(60, 179, 113, 0.8)',    // Nombre de Persona 1 - Verde mar
+                            'rgba(112, 128, 144, 0.8)'   // Sin asignar - Gris acero
+                        ],
+                        borderColor: [
+                            'rgba(10, 46, 92, 1)',
+                            'rgba(46, 139, 87, 1)',
+                            'rgba(212, 175, 55, 1)',
+                            'rgba(139, 69, 19, 1)',
+                            'rgba(75, 0, 130, 1)',
+                            'rgba(255, 99, 71, 1)',
+                            'rgba(32, 178, 170, 1)',
+                            'rgba(255, 127, 80, 1)',
+                            'rgba(147, 112, 219, 1)',
+                            'rgba(60, 179, 113, 1)',
+                            'rgba(112, 128, 144, 1)'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: 'Montserrat',
+                                    size: 12,
+                                    weight: '500'
+                                },
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 46, 92, 0.9)',
+                            titleFont: {
+                                family: 'Playfair Display',
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                family: 'Montserrat',
+                                size: 13
+                            },
+                            padding: 12,
+                            cornerRadius: 6,
+                            displayColors: true
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+            
+            // Gráfico de países
+            const countriesCtx = document.getElementById('countriesChart').getContext('2d');
+            const countriesData = getCountriesData();
+            
+            new Chart(countriesCtx, {
+                type: 'bar',
+                data: {
+                    labels: countriesData.labels,
+                    datasets: [{
+                        label: 'Menciones',
+                        data: countriesData.values,
+                        backgroundColor: 'rgba(46, 139, 87, 0.8)',
+                        borderColor: 'rgba(46, 139, 87, 1)',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(46, 139, 87, 0.9)',
+                            titleFont: {
+                                family: 'Playfair Display',
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                family: 'Montserrat',
+                                size: 13
+                            },
+                            padding: 12,
+                            cornerRadius: 6,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Montserrat',
+                                    weight: '500'
+                                },
+                                padding: 10
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Montserrat',
+                                    weight: '500'
+                                },
+                                padding: 10
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function getProductInterestData() {
+            const productCounts = {
+                'Pasarela de pagos': 0,
+                'Tarjetas USD': 0,
+                'Pago a proveedores': 0,
+                'Criptomonedas': 0,
+                'Múltiples divisas': 0,
+                'Otro': 0
+            };
+            const filteredData = filterData();
+            
+            filteredData.forEach(item => {
+                item.products.forEach(product => {
+                    if (product.includes('Pasarela de pagos')) {
+                        productCounts['Pasarela de pagos']++;
+                    } else if (product.includes('Tarjetas ilimitadas')) {
+                        productCounts['Tarjetas USD']++;
+                    } else if (product.includes('Pagar a proveedores')) {
+                        productCounts['Pago a proveedores']++;
+                    } else if (product.includes('Criptomonedas')) {
+                        productCounts['Criptomonedas']++;
+                    } else if (product.includes('Recibir pagos de clientes en múltiples divisas')) {
+                        productCounts['Múltiples divisas']++;
+                    } else if (product.includes('Otro')) {
+                        productCounts['Otro']++;
+                    }
+                });
+            });
+            return {
+                labels: Object.keys(productCounts),
+                values: Object.values(productCounts)
+            };
+        }
+        
+        function getSurveyorsData() {
+            const surveyorCounts = {};
+            
+            const filteredData = filterData();
+            
+            filteredData.forEach(item => {
+                const surveyor = item.surveyor || 'Sin asignar';
+                surveyorCounts[surveyor] = (surveyorCounts[surveyor] || 0) + 1;
+            });
+            return {
+                labels: Object.keys(surveyorCounts),
+                values: Object.values(surveyorCounts)
+            };
+        }
+        
+        function getCountriesData() {
+            const countryCounts = {};
+            
+            const filteredData = filterData();
+            
+            filteredData.forEach(item => {
+                if (item.countries && item.countries.length > 0) {
+                    item.countries.forEach(country => {
+                        // Limpiar el nombre del país
+                        let cleanCountry = country.trim();
+                        if (cleanCountry.includes(',')) {
+                            // Si hay varios países, procesar cada uno
+                            const countries = cleanCountry.split(',');
+                            countries.forEach(c => {
+                                const cCountry = c.trim();
+                                if (cCountry) {
+                                    countryCounts[cCountry] = (countryCounts[cCountry] || 0) + 1;
+                                }
+                            });
+                        } else if (cleanCountry.includes('-')) {
+                            // Si hay un rango de países, contar como una mención
+                            countryCounts[cleanCountry] = (countryCounts[cleanCountry] || 0) + 1;
+                        } else if (cleanCountry) {
+                            countryCounts[cleanCountry] = (countryCounts[cleanCountry] || 0) + 1;
+                        }
+                    });
+                }
+            });
+            // Ordenar países por número de menciones y tomar los 15 más mencionados
+            const sortedCountries = Object.entries(countryCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 15);
+            return {
+                labels: sortedCountries.map(item => item[0]),
+                values: sortedCountries.map(item => item[1])
+            };
+        }
+        
+        function filterData() {
+            return formData.filter(item => {
+                // Filtro por encuestador
+                if (currentFilters.surveyor !== 'all' && item.surveyor !== currentFilters.surveyor) {
+                    return false;
+                }
+                
+                // Filtro por producto
+                if (currentFilters.product !== 'all') {
+                    let hasProduct = false;
+                    item.products.forEach(product => {
+                        if (currentFilters.product === 'Pasarela' && product.includes('Pasarela de pagos')) {
+                            hasProduct = true;
+                        } else if (currentFilters.product === 'Tarjetas' && product.includes('Tarjetas ilimitadas')) {
+                            hasProduct = true;
+                        } else if (currentFilters.product === 'Proveedores' && product.includes('Pagar a proveedores')) {
+                            hasProduct = true;
+                        } else if (currentFilters.product === 'Cripto' && product.includes('Criptomonedas')) {
+                            hasProduct = true;
+                        } else if (currentFilters.product === 'Divisas' && product.includes('Recibir pagos de clientes en múltiples divisas')) {
+                            hasProduct = true;
+                        } else if (currentFilters.product === 'Otro' && product.includes('Otro')) {
+                            hasProduct = true;
+                        }
+                    });
+                    
+                    if (!hasProduct) {
+                        return false;
+                    }
+                }
+                
+                // Filtro por e-commerce
+                if (currentFilters.ecommerce !== 'all' && item.ecommerce !== currentFilters.ecommerce) {
+                    return false;
+                }
+                
+                // Filtro por búsqueda
+                if (currentFilters.search && currentFilters.search !== '') {
+                    const search = currentFilters.search.toLowerCase();
+                    const searchableText = [
+                        item.name,
+                        item.email,
+                        item.phone,
+                        ...item.products,
+                        ...item.countries,
+                        item.surveyor
+                    ].join(' ').toLowerCase();
+                    
+                    if (!searchableText.includes(search)) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            });
+        }
+        
+        function loadDataTable() {
+            // Mostrar spinner
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            // Simular un pequeño retraso para mostrar el spinner
+            setTimeout(() => {
+                const filteredData = filterData();
+                
+                // Actualizar contador de resultados
+                document.getElementById('resultCount').textContent = `${filteredData.length} resultados`;
+                
+                // Ocultar spinner
+                document.getElementById('loadingOverlay').style.display = 'none';
+                
+                // Si no hay resultados, mostrar mensaje
+                if (filteredData.length === 0) {
+                    document.getElementById('noResults').style.display = 'block';
+                    document.getElementById('tableContainer').style.display = 'none';
+                    document.getElementById('paginationContainer').style.display = 'none';
+                    return;
+                } else {
+                    document.getElementById('noResults').style.display = 'none';
+                    document.getElementById('tableContainer').style.display = 'block';
+                }
+                
+                // Calcular paginación
+                const totalPages = Math.ceil(filteredData.length / recordsPerPage);
+                const startIndex = (currentPage - 1) * recordsPerPage;
+                const endIndex = startIndex + recordsPerPage;
+                const currentData = filteredData.slice(startIndex, endIndex);
+                
+                // Generar la tabla (para escritorio)
+                const tableBody = document.querySelector('#dataTable tbody');
+                tableBody.innerHTML = '';
+                
+                currentData.forEach(item => {
+                    const row = document.createElement('tr');
+                    
+                    // ID
+                    const idCell = document.createElement('td');
+                    idCell.textContent = item.id;
+                    row.appendChild(idCell);
+                    
+                    // Fecha
+                    const dateCell = document.createElement('td');
+                    dateCell.textContent = item.date;
+                    row.appendChild(dateCell);
+                    
+                    // Contacto
+                    const contactCell = document.createElement('td');
+                    const contactInfo = document.createElement('div');
+                    contactInfo.className = 'contact-info';
+                    
+                    const contactName = document.createElement('div');
+                    contactName.className = 'contact-name';
+                    contactName.textContent = item.name || 'Sin nombre';
+                    contactInfo.appendChild(contactName);
+                    
+                    const contactEmail = document.createElement('div');
+                    contactEmail.className = 'contact-email';
+                    contactEmail.textContent = item.email;
+                    contactInfo.appendChild(contactEmail);
+                    
+                    const contactPhone = document.createElement('div');
+                    contactPhone.className = 'contact-phone';
+                    contactPhone.textContent = item.phone;
+                    contactInfo.appendChild(contactPhone);
+                    
+                    contactCell.appendChild(contactInfo);
+                    row.appendChild(contactCell);
+                    
+                    // E-commerce
+                    const ecommerceCell = document.createElement('td');
+                    ecommerceCell.textContent = item.ecommerce;
+                    row.appendChild(ecommerceCell);
+                    
+                    // Productos de interés
+                    const productsCell = document.createElement('td');
+                    if (item.products && item.products.length > 0) {
+                        item.products.forEach(product => {
+                            const tag = document.createElement('span');
+                            tag.className = 'product-tag';
+                            tag.textContent = product.length > 30 ? product.substring(0, 30) + '...' : product;
+                            productsCell.appendChild(tag);
+                        });
+                    } else {
+                        productsCell.textContent = 'No especificado';
+                    }
+                    row.appendChild(productsCell);
+                    
+                    // Países
+                    const countriesCell = document.createElement('td');
+                    if (item.countries && item.countries.length > 0) {
+                        item.countries.forEach(country => {
+                            const tag = document.createElement('span');
+                            tag.className = 'country-tag';
+                            tag.textContent = country.length > 20 ? country.substring(0, 20) + '...' : country;
+                            countriesCell.appendChild(tag);
+                        });
+                    } else {
+                        countriesCell.textContent = 'No especificado';
+                    }
+                    row.appendChild(countriesCell);
+                    
+                    // Encuestador
+                    const surveyorCell = document.createElement('td');
+                    const badge = document.createElement('span');
+                    
+                    // Determinar la clase del badge según el encuestador
+                    if (item.surveyor === 'Carlos') {
+                        badge.className = 'surveyor-badge surveyor-carlos';
+                    } else if (item.surveyor === 'Laura') {
+                        badge.className = 'surveyor-badge surveyor-laura';
+                    } else if (item.surveyor === 'Mauricio') {
+                        badge.className = 'surveyor-badge surveyor-mauricio';
+                    } else if (item.surveyor === 'Pedro') {
+                        badge.className = 'surveyor-badge surveyor-pedro';
+                    } else if (item.surveyor === 'Sofia') {
+                        badge.className = 'surveyor-badge surveyor-sofia';
+                    } else if (item.surveyor === 'Juanjo') {
+                        badge.className = 'surveyor-badge surveyor-juanjo';
+                    } else if (item.surveyor === 'Stephanies') {
+                        badge.className = 'surveyor-badge surveyor-stephanies';
+                    } else if (item.surveyor === 'Salmon') {
+                        badge.className = 'surveyor-badge surveyor-salmon';
+                    } else if (item.surveyor === 'Nombre de Persona 5') {
+                        badge.className = 'surveyor-badge surveyor-nombre5';
+                    } else if (item.surveyor === 'Nombre de Persona 1') {
+                        badge.className = 'surveyor-badge surveyor-nombre1';
+                    } else if (item.surveyor === 'Nombre de Persona') {
+                        badge.className = 'surveyor-badge surveyor-unassigned';
+                    } else if (item.surveyor === 'Nombre de persona') {
+                        badge.className = 'surveyor-badge surveyor-unassigned';
+                    } else {
+                        badge.className = 'surveyor-badge surveyor-unassigned';
+                    }
+                    
+                    badge.textContent = item.surveyor || 'Sin asignar';
+                    surveyorCell.appendChild(badge);
+                    row.appendChild(surveyorCell);
+                    
+                    tableBody.appendChild(row);
+                });
+                
+                // Mostrar/ocultar paginación
+                if (totalPages > 1) {
+                    document.getElementById('paginationContainer').style.display = 'block';
+                    generatePagination(totalPages);
+                } else {
+                    document.getElementById('paginationContainer').style.display = 'none';
+                }
+            }, 300);
+        }
+        
+        function generatePagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            // Botón anterior
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            const prevLink = document.createElement('a');
+            prevLink.className = 'page-link';
+            prevLink.href = '#';
+            prevLink.setAttribute('aria-label', 'Previous');
+            prevLink.innerHTML = '<span aria-hidden="true">&laquo;</span>';
+            prevLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadDataTable();
+                }
+            });
+            prevLi.appendChild(prevLink);
+            pagination.appendChild(prevLi);
+            
+            // Números de página
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                const link = document.createElement('a');
+                link.className = 'page-link';
+                link.href = '#';
+                link.textContent = i;
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage = i;
+                    loadDataTable();
+                });
+                li.appendChild(link);
+                pagination.appendChild(li);
+            }
+            
+            // Botón siguiente
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            const nextLink = document.createElement('a');
+            nextLink.className = 'page-link';
+            nextLink.href = '#';
+            nextLink.setAttribute('aria-label', 'Next');
+            nextLink.innerHTML = '<span aria-hidden="true">&raquo;</span>';
+            nextLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadDataTable();
+                }
+            });
+            nextLi.appendChild(nextLink);
+            pagination.appendChild(nextLi);
+        }
+        
+        function setupFilterEvents() {
+            // Eventos para los botones de filtro
+            document.querySelectorAll('.filter-pill').forEach(button => {
+                button.addEventListener('click', function() {
+                    const filterType = this.getAttribute('data-filter');
+                    const filterValue = this.getAttribute('data-value');
+                    
+                    // Actualizar filtro
+                    currentFilters[filterType] = filterValue;
+                    
+                    // Actualizar UI
+                    document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Resetear página actual
+                    currentPage = 1;
+                    
+                    // Actualizar datos
+                    updateDashboard();
+                });
+            });
+            
+            // Evento para el campo de búsqueda
+            document.getElementById('globalSearch').addEventListener('input', function() {
+                currentFilters.search = this.value.toLowerCase();
+                currentPage = 1;
+                updateDashboard();
+            });
+            
+            // Evento para el botón de restablecer filtros
+            document.getElementById('resetFilters').addEventListener('click', function() {
+                // Restablecer filtros
+                currentFilters = {
+                    surveyor: 'all',
+                    product: 'all',
+                    ecommerce: 'all',
+                    search: ''
+                };
+                
+                // Resetear página actual
+                currentPage = 1;
+                
+                // Actualizar UI
+                document.querySelectorAll('.filter-pill').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.getAttribute('data-value') === 'all') {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                document.getElementById('globalSearch').value = '';
+                
+                // Actualizar datos
+                updateDashboard();
+            });
+            
+            // Evento para el botón de exportación
+            document.getElementById('exportData').addEventListener('click', function() {
+                exportToCSV();
+            });
+        }
+        
+        function exportToCSV() {
+            const filteredData = filterData();
+            
+            if (filteredData.length === 0) {
+                alert('No hay datos para exportar.');
+                return;
+            }
+            
+            // Crear encabezados
+            const headers = ['ID', 'Fecha', 'Nombre', 'Email', 'Teléfono', 'E-commerce', 'Productos', 'Países', 'Encuestador'];
+            
+            // Crear contenido CSV
+            let csvContent = headers.join(',') + '\n';
+            
+            filteredData.forEach(item => {
+                const row = [
+                    item.id,
+                    `"${item.date}"`,
+                    `"${item.name || ''}"`,
+                    `"${item.email}"`,
+                    `"${item.phone}"`,
+                    `"${item.ecommerce}"`,
+                    `"${item.products.join('; ')}"`,
+                    `"${item.countries.join('; ')}"`,
+                    `"${item.surveyor || ''}"`
+                ];
+                csvContent += row.join(',') + '\n';
+            });
+            
+            // Crear blob y descargar
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `coloca_payments_${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        function setupSmoothScroll() {
+            // Configurar navegación suave para los enlaces del menú
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // Actualizar la clase active en el menú
+                        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    }
+                });
+            });
+        }
+        
+        function updateDashboard() {
+            // Actualizar KPIs
+            updateKPIs();
+            
+            // Actualizar gráficos
+            updateCharts();
+            
+            // Actualizar tabla
+            loadDataTable();
+            
+            // Actualizar título de la tabla y mostrar filtros aplicados
+            updateTableTitle();
+            
+            // Actualizar resumen de filtros
+            updateFilterSummary();
+        }
+        
+        function updateTableTitle() {
+            const tableTitle = document.getElementById('tableTitle');
+            const hasActiveFilters = currentFilters.surveyor !== 'all' || 
+                                 currentFilters.product !== 'all' || 
+                                 currentFilters.ecommerce !== 'all' || 
+                                 currentFilters.search !== '';
+            
+            if (hasActiveFilters) {
+                tableTitle.textContent = 'Contactos Filtrados';
+            } else {
+                tableTitle.textContent = 'Datos Detallados';
+            }
+        }
+        
+        function updateFilterSummary() {
+            const filterSummary = document.getElementById('filterSummary');
+            const filterSummaryTags = document.getElementById('filterSummaryTags');
+            
+            // Limpiar tags anteriores
+            filterSummaryTags.innerHTML = '';
+            
+            // Verificar si hay filtros activos
+            const hasActiveFilters = currentFilters.surveyor !== 'all' || 
+                                 currentFilters.product !== 'all' || 
+                                 currentFilters.ecommerce !== 'all' || 
+                                 currentFilters.search !== '';
+            
+            if (hasActiveFilters) {
+                // Mostrar resumen de filtros
+                filterSummary.style.display = 'block';
+                
+                // Agregar tags para cada filtro activo
+                if (currentFilters.surveyor !== 'all') {
+                    const tag = document.createElement('span');
+                    tag.className = 'filter-summary-tag';
+                    tag.textContent = `Encuestador: ${currentFilters.surveyor}`;
+                    filterSummaryTags.appendChild(tag);
+                }
+                
+                if (currentFilters.product !== 'all') {
+                    const tag = document.createElement('span');
+                    tag.className = 'filter-summary-tag';
+                    tag.textContent = `Producto: ${currentFilters.product}`;
+                    filterSummaryTags.appendChild(tag);
+                }
+                
+                if (currentFilters.ecommerce !== 'all') {
+                    const tag = document.createElement('span');
+                    tag.className = 'filter-summary-tag';
+                    tag.textContent = `E-commerce: ${currentFilters.ecommerce}`;
+                    filterSummaryTags.appendChild(tag);
+                }
+                
+                if (currentFilters.search !== '') {
+                    const tag = document.createElement('span');
+                    tag.className = 'filter-summary-tag';
+                    tag.textContent = `Búsqueda: "${currentFilters.search}"`;
+                    filterSummaryTags.appendChild(tag);
+                }
+            } else {
+                // Ocultar resumen de filtros
+                filterSummary.style.display = 'none';
+            }
+        }
+        
+        function updateKPIs() {
+            const filteredData = filterData();
+            
+            // Total de respuestas
+            document.querySelector('.stat-value').textContent = filteredData.length;
+            
+            // Porcentaje que hace e-commerce
+            const ecommerceCount = filteredData.filter(item => item.ecommerce === 'Sí').length;
+            const ecommercePercentage = filteredData.length > 0 ? 
+                Math.round((ecommerceCount / filteredData.length) * 100) : 0;
+            document.querySelectorAll('.stat-value')[1].textContent = ecommerceCount;
+            
+            // Países representados
+            const countriesSet = new Set();
+            filteredData.forEach(item => {
+                if (item.countries && item.countries.length > 0) {
+                    item.countries.forEach(country => {
+                        if (country.includes(',')) {
+                            const countries = country.split(',');
+                            countries.forEach(c => {
+                                const cleanCountry = c.trim();
+                                if (cleanCountry) {
+                                    countriesSet.add(cleanCountry);
+                                }
+                            });
+                        } else if (country) {
+                            countriesSet.add(country.trim());
+                        }
+                    });
+                }
+            });
+            document.querySelectorAll('.stat-value')[2].textContent = countriesSet.size >= 25 ? '25+' : countriesSet.size;
+            
+            // Encuestadores
+            const surveyorsSet = new Set();
+            filteredData.forEach(item => {
+                if (item.surveyor) {
+                    surveyorsSet.add(item.surveyor);
+                }
+            });
+            document.querySelectorAll('.stat-value')[3].textContent = surveyorsSet.size;
+        }
+        
+        function updateCharts() {
+            // Destruir gráficos existentes
+            Chart.getChart('productsChart').destroy();
+            Chart.getChart('surveyorsChart').destroy();
+            Chart.getChart('countriesChart').destroy();
+            
+            // Volver a inicializar gráficos
+            initCharts();
+        }
+        
+        function animateOnScroll() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+    </script>
+</body>
+</html>
