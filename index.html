@@ -6,6 +6,19 @@
 <title>AVOI — Compra e venda de criptoativos com transparência e conformidade</title>
 <meta name="keywords" content="intermediação de ativos virtuais, PSAV, mesa OTC, API de criptoativos, operações institucionais, infraestrutura tecnológica, compra venda e troca de criptoativos, Lei 14.478/2022, Resolução BCB 520, compliance PLD/FT, KYC, KYT" />
 <meta name="description" content="A AVOI oferece uma estrutura segura para pessoas físicas e jurídicas realizarem operações de compra, venda e troca de criptoativos, com verificação cadastral, análise de risco, monitoramento transacional e atendimento humano." />
+<link rel="canonical" href="https://mauricio-coloca.github.io/FeriaEffix/" />
+<meta name="theme-color" content="#0B0E1A" />
+<!-- Open Graph / redes sociais -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://mauricio-coloca.github.io/FeriaEffix/" />
+<meta property="og:title" content="AVOI — Compra e venda de criptoativos com transparência e conformidade" />
+<meta property="og:description" content="Intermediação de ativos virtuais por conta de terceiros, com verificação cadastral, KYC/KYT, monitoramento transacional e atendimento humano." />
+<meta property="og:locale" content="pt_BR" />
+<!-- Para a prévia exibir imagem, suba uma imagem 1200x630 e descomente: -->
+<!-- <meta property="og:image" content="https://mauricio-coloca.github.io/FeriaEffix/docs/og-avoi.png" /> -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="AVOI — Compra e venda de criptoativos com transparência e conformidade" />
+<meta name="twitter:description" content="Intermediação de ativos virtuais por conta de terceiros, com KYC/KYT e conformidade regulatória." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -321,6 +334,7 @@ section{position:relative}
 .form .btn{width:100%;justify-content:center}
 .form-msg{margin-top:14px;font-size:.9rem;padding:12px 14px;border-radius:9px;display:none}
 .form-msg.ok{display:block;background:rgba(47,182,124,.12);border:1px solid rgba(47,182,124,.4);color:#8be8c0}
+.form-msg.err{display:block;background:rgba(224,90,90,.12);border:1px solid rgba(224,90,90,.4);color:#ffb4b4}
 .err-text{color:#ff9a9a;font-size:.78rem;margin-top:5px;display:none}
 
 /* ============================================================
@@ -504,7 +518,7 @@ footer{background:var(--bg-deeper);border-top:1px solid var(--border-dark);paddi
 </div>
 
 <!-- ============================ TRUST ============================ -->
-<section class="light pad" id="confianca">
+<section class="light pad" id="sobre">
   <div class="wrap">
     <span class="eyebrow reveal">Por que a AVOI</span>
     <h2 class="h-sec reveal">Uma operação estruturada para um mercado em evolução</h2>
@@ -895,6 +909,7 @@ footer{background:var(--bg-deeper);border-top:1px solid var(--border-dark);paddi
         <ul>
           <li><a href="#sobre">Sobre a AVOI</a></li>
           <li><a href="#servicos">Serviços</a></li>
+          <li><a href="#institucional">Institucional</a></li>
           <li><a href="#ativos">Ativos</a></li>
           <li><a href="#compliance">Compliance</a></li>
           <li><a href="#regulatorio">Regulatório</a></li>
@@ -958,12 +973,25 @@ document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
 
 // Form validation (client-side demo — não envia dados nesta etapa)
 const form=document.getElementById('contactForm');
+
+/* =========================================================
+   CONFIGURAÇÃO DO ENVIO DO FORMULÁRIO
+   1) Crie um formulário gratuito em https://formspree.io
+   2) Substitua "SEU_ID_AQUI" pelo seu endpoint, ex.:
+      https://formspree.io/f/abcdwxyz
+   Enquanto o ID for o placeholder, o formulário usa um
+   fallback que abre o aplicativo de e-mail (mailto).
+   ========================================================= */
+const FORMSPREE_ENDPOINT='https://formspree.io/f/SEU_ID_AQUI';
+const FALLBACK_EMAIL='contato@avoi.com.br';
+
 function showErr(field,show){
   const err=field.parentElement.querySelector('.err-text');
   if(err)err.style.display=show?'block':'none';
   field.style.borderColor=show?'#ff9a9a':'';
 }
-form.addEventListener('submit',function(ev){
+
+form.addEventListener('submit',async function(ev){
   ev.preventDefault();
   let valid=true;
   ['nome','tipo','assunto','email','msg'].forEach(id=>{
@@ -977,12 +1005,54 @@ form.addEventListener('submit',function(ev){
   if(!consent.checked)valid=false;
 
   const msg=document.getElementById('formMsg');
-  if(valid){
+  if(!valid){ msg.className='form-msg'; msg.textContent=''; return; }
+
+  const data={
+    nome:document.getElementById('nome').value.trim(),
+    tipo:document.getElementById('tipo').value,
+    assunto:document.getElementById('assunto').value,
+    email:document.getElementById('email').value.trim(),
+    telefone:document.getElementById('tel').value.trim(),
+    mensagem:document.getElementById('msg').value.trim()
+  };
+
+  /* Fallback: enquanto o endpoint não estiver configurado,
+     abre o cliente de e-mail com os dados preenchidos. */
+  if(FORMSPREE_ENDPOINT.includes('SEU_ID_AQUI')){
+    const corpo=encodeURIComponent(
+      'Nome: '+data.nome+'\nTipo: '+data.tipo+'\nAssunto: '+data.assunto+
+      '\nE-mail: '+data.email+'\nTelefone: '+data.telefone+'\n\n'+data.mensagem
+    );
+    const sub=encodeURIComponent('[Site] '+data.assunto+' — '+data.nome);
+    window.location.href='mailto:'+FALLBACK_EMAIL+'?subject='+sub+'&body='+corpo;
     msg.className='form-msg ok';
-    msg.textContent='Recebemos sua mensagem. Em breve a equipe da AVOI entrará em contato pelo e-mail informado.';
-    form.reset();
-  }else{
-    msg.className='form-msg';msg.textContent='';
+    msg.textContent='Abrimos seu aplicativo de e-mail para concluir o envio.';
+    return;
+  }
+
+  /* Envio real via Formspree */
+  const btn=form.querySelector('button[type="submit"]');
+  const txt=btn.textContent;
+  btn.disabled=true; btn.textContent='Enviando…';
+  msg.className='form-msg'; msg.textContent='';
+  try{
+    const resp=await fetch(FORMSPREE_ENDPOINT,{
+      method:'POST',
+      headers:{'Accept':'application/json'},
+      body:new FormData(form)
+    });
+    if(resp.ok){
+      msg.className='form-msg ok';
+      msg.textContent='Recebemos sua mensagem. Em breve a equipe da AVOI entrará em contato pelo e-mail informado.';
+      form.reset();
+    }else{
+      throw new Error('Falha no envio');
+    }
+  }catch(e){
+    msg.className='form-msg err';
+    msg.textContent='Não foi possível enviar agora. Tente novamente ou escreva para '+FALLBACK_EMAIL+'.';
+  }finally{
+    btn.disabled=false; btn.textContent=txt;
   }
 });
 </script>
