@@ -78,6 +78,11 @@ a{color:inherit;text-decoration:none}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 34px -10px rgba(59,91,255,.85)}
 .btn-grad{background:var(--grad);color:#fff;box-shadow:0 10px 30px -10px rgba(122,92,255,.7)}
 .btn-grad:hover{transform:translateY(-2px);box-shadow:0 16px 40px -10px rgba(122,92,255,.9)}
+.btn-buy{position:relative;background:var(--grad);color:#fff;font-weight:700;box-shadow:0 12px 36px -8px rgba(122,92,255,.9)}
+.btn-buy:hover{transform:translateY(-2px);filter:brightness(1.07);box-shadow:0 18px 48px -8px rgba(122,92,255,1)}
+.btn-buy::after{content:"";position:absolute;inset:0;border-radius:inherit;animation:buyPulse 2.4s ease-out infinite;pointer-events:none}
+@keyframes buyPulse{0%{box-shadow:0 0 0 0 rgba(122,92,255,.5)}70%{box-shadow:0 0 0 14px rgba(122,92,255,0)}100%{box-shadow:0 0 0 0 rgba(122,92,255,0)}}
+@media (prefers-reduced-motion:reduce){.btn-buy::after{animation:none}}
 .btn-ghost{background:transparent;border-color:var(--border-dark);color:var(--text-on-dark)}
 .btn-ghost:hover{border-color:var(--accent-soft);background:rgba(169,184,255,.06)}
 .btn-ghost-light{background:transparent;border-color:var(--border-light);color:var(--text-on-light)}
@@ -479,6 +484,7 @@ footer{background:var(--bg-deeper);border-top:1px solid var(--border-dark);paddi
       </ul>
     </nav>
     <div class="nav-cta">
+      <a href="https://app.avoi.com.br" class="btn btn-buy">Compre agora <span class="arr">→</span></a>
       <a href="#atendimento" class="btn btn-primary">Fale com a AVOI</a>
       <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -513,7 +519,8 @@ footer{background:var(--bg-deeper);border-top:1px solid var(--border-dark);paddi
       <h1 class="reveal in">Compra e venda de criptoativos com <span class="accent">transparência e conformidade</span>.</h1>
       <p class="sub reveal in d1">A AVOI oferece uma estrutura segura para pessoas físicas e jurídicas realizarem operações de compra, venda e troca de criptoativos por conta do próprio cliente, com verificação cadastral, análise de risco, monitoramento transacional e atendimento humano.</p>
       <div class="hero-actions reveal in d2">
-        <a href="#atendimento" class="btn btn-grad">Fale com a AVOI <span class="arr">→</span></a>
+        <a href="https://app.avoi.com.br" class="btn btn-buy">Compre agora <span class="arr">→</span></a>
+        <a href="#atendimento" class="btn btn-ghost">Fale com a AVOI</a>
         <a href="#compliance" class="btn btn-ghost">Conheça nossa estrutura de conformidade</a>
       </div>
       <div class="hero-chips reveal in d3">
@@ -1011,7 +1018,10 @@ footer{background:var(--bg-deeper);border-top:1px solid var(--border-dark);paddi
   <div class="wrap">
     <h2 class="reveal">Pronto para conversar com a AVOI?</h2>
     <p class="reveal d1">Entre em contato para entender como realizamos operações de compra, venda e troca de criptoativos com transparência e conformidade.</p>
-    <a href="#atendimento" class="btn btn-grad reveal d2">Fale com a AVOI <span class="arr">→</span></a>
+    <div class="reveal d2" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="https://app.avoi.com.br" class="btn btn-buy">Compre agora <span class="arr">→</span></a>
+      <a href="#atendimento" class="btn btn-ghost">Fale com a AVOI</a>
+    </div>
   </div>
 </section>
 
